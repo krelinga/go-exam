@@ -1,34 +1,36 @@
-package exam
+package exam_test
 
 import (
 	"strings"
 	"testing"
+
+	"github.com/krelinga/go-exam"
 )
 
 func TestLocString(t *testing.T) {
 	tests := []struct {
 		name     string
-		loc      Loc
+		loc      exam.Loc
 		expected string
 	}{
 		{
 			name:     "basic location",
-			loc:      Loc{File: "/path/to/file.go", Line: 42},
+			loc:      exam.Loc{File: "/path/to/file.go", Line: 42},
 			expected: "/path/to/file.go:42",
 		},
 		{
 			name:     "relative path",
-			loc:      Loc{File: "file.go", Line: 1},
+			loc:      exam.Loc{File: "file.go", Line: 1},
 			expected: "file.go:1",
 		},
 		{
 			name:     "zero line",
-			loc:      Loc{File: "test.go", Line: 0},
+			loc:      exam.Loc{File: "test.go", Line: 0},
 			expected: "test.go:0",
 		},
 		{
 			name:     "zero value",
-			loc:      Loc{},
+			loc:      exam.Loc{},
 			expected: "<uninitialized>",
 		},
 	}
@@ -45,7 +47,7 @@ func TestLocString(t *testing.T) {
 
 func TestHere(t *testing.T) {
 	// Call Here() and verify it captures the correct file and line
-	loc1 := Here()
+	loc1 := exam.Here()
 
 	// Check that the file contains "loc_test.go"
 	if !strings.HasSuffix(loc1.File, "loc_test.go") {
@@ -67,8 +69,8 @@ func TestHere(t *testing.T) {
 	}
 
 	// Test that consecutive calls to Here() return consecutive line numbers
-	loc2 := Here()
-	loc3 := Here()
+	loc2 := exam.Here()
+	loc3 := exam.Here()
 
 	if loc2.File != loc3.File {
 		t.Errorf("Here() calls returned different files: %q vs %q", loc2.File, loc3.File)
