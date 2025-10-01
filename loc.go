@@ -13,6 +13,9 @@ type Loc struct {
 
 // String returns a readable string representation of the location.
 func (l Loc) String() string {
+	if l.File == "" && l.Line == 0 {
+		return "<uninitialized>"
+	}
 	return fmt.Sprintf("%s:%d", l.File, l.Line)
 }
 
