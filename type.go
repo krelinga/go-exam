@@ -11,8 +11,8 @@ func New(t *testing.T) *E {
 
 type E struct {
 	*testing.T
-	must bool
-	locs []Loc
+	fatal bool
+	locs  []Loc
 }
 
 // Wrap testing.T methods
@@ -80,7 +80,7 @@ func (e *E) Skipf(format string, args ...any) {
 
 func (e *E) WithFatal() *E {
 	e = e.clone()
-	e.must = true
+	e.fatal = true
 	return e
 }
 
@@ -91,7 +91,7 @@ func (e *E) WithLoc(loc Loc) *E {
 }
 
 func (e *E) clone() *E {
-	return &E{T: e.T, must: e.must, locs: append([]Loc(nil), e.locs...)}
+	return &E{T: e.T, fatal: e.fatal, locs: append([]Loc(nil), e.locs...)}
 }
 
 func (e *E) logLocs() {
@@ -101,7 +101,7 @@ func (e *E) logLocs() {
 }
 
 func (e *E) recordError() {
-	if e.must {
+	if e.fatal {
 		e.T.FailNow()
 	} else {
 		e.T.Fail()
