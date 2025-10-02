@@ -48,6 +48,7 @@ func TestLocString(t *testing.T) {
 func TestHere(t *testing.T) {
 	// Call Here() and verify it captures the correct file and line
 	loc1 := exam.Here()
+	t.Log("Captured location:", loc1)
 
 	// Check that the file contains "loc_test.go"
 	if !strings.HasSuffix(loc1.File, "loc_test.go") {
