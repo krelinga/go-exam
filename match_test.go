@@ -26,19 +26,19 @@ func TestMatch(t *testing.T) {
 	})
 }
 
-func TestFilterMatch(t *testing.T) {
+func TestMustMatch(t *testing.T) {
 	e := exam.New(t)
-	e.Run("FilterMatch Success", func(e *exam.E) {
+	e.Run("MustMatch Success", func(e *exam.E) {
 		got := exam.MustMatch(e, "hello", match.Equal("hello"))
 		if got != "hello" {
 			e.Fatalf("expected got to be 'hello', got %q", got)
 		}
 	})
-	e.Run("FilterMatch Failure", func(e *exam.E) {
+	e.Run("MustMatch Failure", func(e *exam.E) {
 		if !*manualFlag {
 			e.Skip("skipping test in manual mode")
 		}
 		exam.MustMatch(e, "hello", match.NotEqual("hello"))
-		e.Fatal("expected FilterMatch to fail and stop execution")
+		e.Fatal("expected MustMatch to fail and stop execution")
 	})
 }
