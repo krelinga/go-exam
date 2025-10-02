@@ -2,6 +2,8 @@ package exam
 
 import (
 	"fmt"
+	"os"
+	"path/filepath"
 	"runtime"
 )
 
@@ -25,5 +27,19 @@ func Here() Loc {
 	if !ok {
 		return Loc{File: "unknown", Line: 0}
 	}
-	return Loc{File: file, Line: line}
+
+	// Convert absolute path to relative path from current working directory
+	cwd, err := os.Getwd()
+	if err != nil {
+		// If we can't get the current working directory, return the absolute path
+		return Loc{File: file, Line: line}
+	}
+
+	relPath, err := filepath.Rel(cwd, file)
+	if err != nil {
+		// If we can't make it relative, return the absolute path
+		return Loc{File: file, Line: line}
+	}
+
+	return Loc{File: relPath, Line: line}
 }
