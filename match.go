@@ -13,6 +13,6 @@ func Match[T any](e *E, got T, matcher match.Matcher[T]) bool {
 
 func FilterMatch[T any](e *E, got T, matcher match.Matcher[T]) T {
 	e.Helper()
-	Match(e.WithMust(), got, matcher)
+	Match(e.WithFatal(), got, matcher)
 	return got
 }

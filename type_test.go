@@ -20,7 +20,7 @@ func TestType(t *testing.T) {
 	})
 
 	t.Run("WithMust", func(t *testing.T) {
-		e := exam.New(t).WithMust()
+		e := exam.New(t).WithFatal()
 		e.Error("an error with must=true")
 		e.Log("this should not appear because of must=true")
 	})

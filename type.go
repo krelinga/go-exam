@@ -78,7 +78,7 @@ func (e *E) Skipf(format string, args ...any) {
 	e.T.SkipNow()
 }
 
-func (e *E) WithMust() *E {
+func (e *E) WithFatal() *E {
 	e = e.clone()
 	e.must = true
 	return e
