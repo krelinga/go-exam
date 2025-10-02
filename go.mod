@@ -1,3 +1,3 @@
 module github.com/krelinga/go-exam
 
-go 1.24.7
+go 1.25.0
