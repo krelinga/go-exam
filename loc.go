@@ -23,7 +23,11 @@ func (l Loc) String() string {
 
 // Here returns a Loc instance with the file and line number where Here() was called from.
 func Here() Loc {
-	_, file, line, ok := runtime.Caller(1)
+	return hereOffset(1)
+}
+
+func hereOffset(skip int) Loc {
+	_, file, line, ok := runtime.Caller(skip + 1)
 	if !ok {
 		return Loc{File: "unknown", Line: 0}
 	}
