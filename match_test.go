@@ -29,7 +29,7 @@ func TestMatch(t *testing.T) {
 func TestFilterMatch(t *testing.T) {
 	e := exam.New(t)
 	e.Run("FilterMatch Success", func(e *exam.E) {
-		got := exam.FilterMatch(e, "hello", match.Equal("hello"))
+		got := exam.MustMatch(e, "hello", match.Equal("hello"))
 		if got != "hello" {
 			e.Fatalf("expected got to be 'hello', got %q", got)
 		}
@@ -38,7 +38,7 @@ func TestFilterMatch(t *testing.T) {
 		if !*manualFlag {
 			e.Skip("skipping test in manual mode")
 		}
-		exam.FilterMatch(e, "hello", match.NotEqual("hello"))
+		exam.MustMatch(e, "hello", match.NotEqual("hello"))
 		e.Fatal("expected FilterMatch to fail and stop execution")
 	})
 }

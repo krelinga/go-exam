@@ -11,7 +11,7 @@ func Match[T any](e *E, got T, matcher match.Matcher[T]) bool {
 	return matched
 }
 
-func FilterMatch[T any](e *E, got T, matcher match.Matcher[T]) T {
+func MustMatch[T any](e *E, got T, matcher match.Matcher[T]) T {
 	e.Helper()
 	Match(e.WithFatal(), got, matcher)
 	return got
