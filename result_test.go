@@ -9,8 +9,8 @@ import (
 
 func TestResult(t *testing.T) {
 	t.Run("NewResult_Ok", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, true)
 
@@ -20,8 +20,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("NewResult_Failed", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, false)
 
@@ -31,8 +31,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Log_WhenFailed", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, false)
 		returnedResult := result.Log("test message")
@@ -49,8 +49,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Log_WhenOk", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, true)
 		result.Log("test message")
@@ -62,8 +62,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Logf_WhenFailed", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, false)
 		returnedResult := result.Logf("test message %d", 42)
@@ -80,8 +80,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Logf_WhenOk", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, true)
 		result.Logf("test message %d", 42)
@@ -93,8 +93,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Fatal_WhenFailed", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, false)
 		returnValue := result.Fatal()
@@ -109,8 +109,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Fatal_WhenOk", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, true)
 		returnValue := result.Fatal()
@@ -125,8 +125,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Ok_ReturnsTrueForSuccessfulResult", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, true)
 
@@ -136,8 +136,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Ok_ReturnsFalseForFailedResult", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, false)
 
@@ -147,8 +147,8 @@ func TestResult(t *testing.T) {
 	})
 
 	t.Run("Chaining", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		result := exam.NewResult(recorder, false)
 

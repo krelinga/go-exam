@@ -18,18 +18,20 @@ type Recorder struct {
 	name      string
 }
 
-func NewRecorder(name string) (*Recorder, func()) {
+func NewRecorder(name string) *Recorder {
 	r := &Recorder{
 		name: name,
 	}
-	return r, func() {
-		r.mu.Lock()
-		defer r.mu.Unlock()
-		for _, cleanup := range r.cleanups {
-			cleanup()
-		}
-		r.cleanups = nil
+	return r
+}
+
+func (r *Recorder) Finish() {
+	r.mu.Lock()
+	defer r.mu.Unlock()
+	for _, cleanup := range r.cleanups {
+		cleanup()
 	}
+	r.cleanups = nil
 }
 
 func (r *Recorder) Cleanup(f func()) {

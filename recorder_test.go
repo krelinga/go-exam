@@ -11,8 +11,8 @@ import (
 
 func TestRecorder(t *testing.T) {
 	t.Run("NewRecorder", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test-recorder")
-		defer cleanup()
+		recorder := exam.NewRecorder("test-recorder")
+		defer recorder.Finish()
 
 		if recorder.Name() != "test-recorder" {
 			t.Errorf("expected name to be 'test-recorder', got %q", recorder.Name())
@@ -28,14 +28,14 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderCleanup", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
+		recorder := exam.NewRecorder("test")
 
 		var cleanupCalled bool
 		recorder.Cleanup(func() {
 			cleanupCalled = true
 		})
 
-		cleanup()
+		recorder.Finish()
 
 		if !cleanupCalled {
 			t.Error("expected cleanup function to be called")
@@ -43,8 +43,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderError", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Error("test error")
 
@@ -59,8 +59,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderErrorf", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Errorf("test error %d", 42)
 
@@ -75,8 +75,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderFail", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Fail()
 
@@ -90,8 +90,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderFailNow", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.FailNow()
 
@@ -105,8 +105,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderFatal", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Fatal("fatal error")
 
@@ -125,8 +125,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderFatalf", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Fatalf("fatal error %s", "test")
 
@@ -145,8 +145,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderLog", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Log("test log")
 
@@ -161,8 +161,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderLogf", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Logf("test log %d", 42)
 
@@ -177,8 +177,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderSkip", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Skip("skip reason")
 
@@ -193,8 +193,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderSkipNow", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.SkipNow()
 
@@ -204,8 +204,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderSkipf", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		recorder.Skipf("skip reason %s", "test")
 
@@ -220,8 +220,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderContext", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		ctx := recorder.Context()
 		if ctx != context.Background() {
@@ -230,8 +230,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderOutput", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		output := recorder.Output()
 		if output == nil {
@@ -247,8 +247,8 @@ func TestRecorder(t *testing.T) {
 	})
 
 	t.Run("RecorderConcurrency", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		var wg sync.WaitGroup
 		numGoroutines := 10

@@ -9,8 +9,8 @@ import (
 
 func TestMatch(t *testing.T) {
 	t.Run("Match_Success", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		matcher := match.Equal(42)
 		result := exam.Match(recorder, 42, matcher)
@@ -21,8 +21,8 @@ func TestMatch(t *testing.T) {
 	})
 
 	t.Run("Match_Failure", func(t *testing.T) {
-		recorder, cleanup := exam.NewRecorder("test")
-		defer cleanup()
+		recorder := exam.NewRecorder("test")
+		defer recorder.Finish()
 
 		matcher := match.Equal(100)
 		result := exam.Match(recorder, 42, matcher)
