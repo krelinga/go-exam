@@ -150,26 +150,14 @@ func (r *Recorder) Output() io.Writer {
 	return newSafeWriter(&r.logs, &r.mu)
 }
 
-func (r *Recorder) GetLogs() string {
+func (r *Recorder) Logs() string {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.logs.String()
 }
 
-func (r *Recorder) GetFailed() bool {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-	return r.failed
-}
-
-func (r *Recorder) GetFailNowed() bool {
+func (r *Recorder) FailNowed() bool {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return r.failNowed
-}
-
-func (r *Recorder) GetSkipped() bool {
-	r.mu.RLock()
-	defer r.mu.RUnlock()
-	return r.skipped
 }

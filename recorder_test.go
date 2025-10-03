@@ -52,7 +52,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be failed after Error")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "ERROR: test error\n") {
 			t.Errorf("expected logs to contain error message, got %q", logs)
 		}
@@ -68,7 +68,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be failed after Errorf")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "ERROR: test error 42\n") {
 			t.Errorf("expected logs to contain formatted error message, got %q", logs)
 		}
@@ -84,7 +84,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be failed after Fail")
 		}
 
-		if recorder.GetFailNowed() {
+		if recorder.FailNowed() {
 			t.Error("expected recorder to not be fail-nowed after Fail")
 		}
 	})
@@ -99,7 +99,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be failed after FailNow")
 		}
 
-		if !recorder.GetFailNowed() {
+		if !recorder.FailNowed() {
 			t.Error("expected recorder to be fail-nowed after FailNow")
 		}
 	})
@@ -114,11 +114,11 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be failed after Fatal")
 		}
 
-		if !recorder.GetFailNowed() {
+		if !recorder.FailNowed() {
 			t.Error("expected recorder to be fail-nowed after Fatal")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "FATAL: fatal error\n") {
 			t.Errorf("expected logs to contain fatal message, got %q", logs)
 		}
@@ -134,11 +134,11 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be failed after Fatalf")
 		}
 
-		if !recorder.GetFailNowed() {
+		if !recorder.FailNowed() {
 			t.Error("expected recorder to be fail-nowed after Fatalf")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "FATAL: fatal error test\n") {
 			t.Errorf("expected logs to contain formatted fatal message, got %q", logs)
 		}
@@ -154,7 +154,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to not be failed after Log")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "LOG: test log\n") {
 			t.Errorf("expected logs to contain log message, got %q", logs)
 		}
@@ -170,7 +170,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to not be failed after Logf")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "LOG: test log 42\n") {
 			t.Errorf("expected logs to contain formatted log message, got %q", logs)
 		}
@@ -186,7 +186,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be skipped after Skip")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "SKIP: skip reason\n") {
 			t.Errorf("expected logs to contain skip message, got %q", logs)
 		}
@@ -213,7 +213,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be skipped after Skipf")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "SKIP: skip reason test\n") {
 			t.Errorf("expected logs to contain formatted skip message, got %q", logs)
 		}
@@ -240,7 +240,7 @@ func TestRecorder(t *testing.T) {
 
 		// Test writing to output
 		output.Write([]byte("test output"))
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "test output") {
 			t.Errorf("expected logs to contain output, got %q", logs)
 		}
@@ -273,7 +273,7 @@ func TestRecorder(t *testing.T) {
 			t.Error("expected recorder to be skipped after concurrent skips")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if logs == "" {
 			t.Error("expected logs to contain messages from concurrent operations")
 		}

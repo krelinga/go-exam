@@ -42,7 +42,7 @@ func TestResult(t *testing.T) {
 			t.Error("expected Log to return the same result for chaining")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "LOG: test message\n") {
 			t.Errorf("expected logs to contain log message when failed, got %q", logs)
 		}
@@ -55,7 +55,7 @@ func TestResult(t *testing.T) {
 		result := exam.NewResult(recorder, true)
 		result.Log("test message")
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if strings.Contains(logs, "test message") {
 			t.Errorf("expected logs to not contain message when ok, got %q", logs)
 		}
@@ -73,7 +73,7 @@ func TestResult(t *testing.T) {
 			t.Error("expected Logf to return the same result for chaining")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "LOG: test message 42\n") {
 			t.Errorf("expected logs to contain formatted log message when failed, got %q", logs)
 		}
@@ -86,7 +86,7 @@ func TestResult(t *testing.T) {
 		result := exam.NewResult(recorder, true)
 		result.Logf("test message %d", 42)
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if strings.Contains(logs, "test message 42") {
 			t.Errorf("expected logs to not contain formatted message when ok, got %q", logs)
 		}
@@ -103,7 +103,7 @@ func TestResult(t *testing.T) {
 			t.Error("expected Fatal to return false when result is failed")
 		}
 
-		if !recorder.GetFailNowed() {
+		if !recorder.FailNowed() {
 			t.Error("expected recorder to be fail-nowed after Fatal on failed result")
 		}
 	})
@@ -119,7 +119,7 @@ func TestResult(t *testing.T) {
 			t.Error("expected Fatal to return true when result is ok")
 		}
 
-		if recorder.GetFailNowed() {
+		if recorder.FailNowed() {
 			t.Error("expected recorder to not be fail-nowed after Fatal on ok result")
 		}
 	})
@@ -159,7 +159,7 @@ func TestResult(t *testing.T) {
 			t.Error("expected chained methods to return the same result")
 		}
 
-		logs := recorder.GetLogs()
+		logs := recorder.Logs()
 		if !strings.Contains(logs, "LOG: first message\n") {
 			t.Errorf("expected logs to contain first message, got %q", logs)
 		}
