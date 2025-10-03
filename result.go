@@ -1,36 +1,34 @@
 package exam
 
-import "testing"
-
-func NewResult(t *testing.T, ok bool) *Result {
+func NewResult(e E, ok bool) *Result {
 	return &Result{
-		t: t,
+		e:      e,
 		failed: !ok,
 	}
 }
 
 type Result struct {
-	t      *testing.T
+	e      E
 	failed bool
 }
 
 func (r *Result) Log(args ...any) *Result {
 	if r.failed {
-		r.t.Log(args...)
+		r.e.Log(args...)
 	}
 	return r
 }
 
 func (r *Result) Logf(format string, args ...any) *Result {
 	if r.failed {
-		r.t.Logf(format, args...)
+		r.e.Logf(format, args...)
 	}
 	return r
 }
 
 func (r *Result) Fatal() bool {
 	if r.failed {
-		r.t.FailNow()
+		r.e.FailNow()
 	}
 	return !r.failed
 }
