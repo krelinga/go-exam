@@ -9,271 +9,273 @@ import (
 	"github.com/krelinga/go-exam"
 )
 
-func TestNewRecorder(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test-recorder")
-	defer cleanup()
+func TestRecorder(t *testing.T) {
+	t.Run("NewRecorder", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test-recorder")
+		defer cleanup()
 
-	if recorder.Name() != "test-recorder" {
-		t.Errorf("expected name to be 'test-recorder', got %q", recorder.Name())
-	}
+		if recorder.Name() != "test-recorder" {
+			t.Errorf("expected name to be 'test-recorder', got %q", recorder.Name())
+		}
 
-	if recorder.Failed() {
-		t.Error("expected new recorder to not be failed")
-	}
+		if recorder.Failed() {
+			t.Error("expected new recorder to not be failed")
+		}
 
-	if recorder.Skipped() {
-		t.Error("expected new recorder to not be skipped")
-	}
-}
-
-func TestRecorderCleanup(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-
-	var cleanupCalled bool
-	recorder.Cleanup(func() {
-		cleanupCalled = true
+		if recorder.Skipped() {
+			t.Error("expected new recorder to not be skipped")
+		}
 	})
 
-	cleanup()
+	t.Run("RecorderCleanup", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
 
-	if !cleanupCalled {
-		t.Error("expected cleanup function to be called")
-	}
-}
+		var cleanupCalled bool
+		recorder.Cleanup(func() {
+			cleanupCalled = true
+		})
 
-func TestRecorderError(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		cleanup()
 
-	recorder.Error("test error")
+		if !cleanupCalled {
+			t.Error("expected cleanup function to be called")
+		}
+	})
 
-	if !recorder.Failed() {
-		t.Error("expected recorder to be failed after Error")
-	}
+	t.Run("RecorderError", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "ERROR: test error\n") {
-		t.Errorf("expected logs to contain error message, got %q", logs)
-	}
-}
+		recorder.Error("test error")
 
-func TestRecorderErrorf(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.Failed() {
+			t.Error("expected recorder to be failed after Error")
+		}
 
-	recorder.Errorf("test error %d", 42)
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "ERROR: test error\n") {
+			t.Errorf("expected logs to contain error message, got %q", logs)
+		}
+	})
 
-	if !recorder.Failed() {
-		t.Error("expected recorder to be failed after Errorf")
-	}
+	t.Run("RecorderErrorf", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "ERROR: test error 42\n") {
-		t.Errorf("expected logs to contain formatted error message, got %q", logs)
-	}
-}
+		recorder.Errorf("test error %d", 42)
 
-func TestRecorderFail(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.Failed() {
+			t.Error("expected recorder to be failed after Errorf")
+		}
 
-	recorder.Fail()
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "ERROR: test error 42\n") {
+			t.Errorf("expected logs to contain formatted error message, got %q", logs)
+		}
+	})
 
-	if !recorder.Failed() {
-		t.Error("expected recorder to be failed after Fail")
-	}
+	t.Run("RecorderFail", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	if recorder.GetFailNowed() {
-		t.Error("expected recorder to not be fail-nowed after Fail")
-	}
-}
+		recorder.Fail()
 
-func TestRecorderFailNow(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.Failed() {
+			t.Error("expected recorder to be failed after Fail")
+		}
 
-	recorder.FailNow()
+		if recorder.GetFailNowed() {
+			t.Error("expected recorder to not be fail-nowed after Fail")
+		}
+	})
 
-	if !recorder.Failed() {
-		t.Error("expected recorder to be failed after FailNow")
-	}
+	t.Run("RecorderFailNow", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	if !recorder.GetFailNowed() {
-		t.Error("expected recorder to be fail-nowed after FailNow")
-	}
-}
+		recorder.FailNow()
 
-func TestRecorderFatal(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.Failed() {
+			t.Error("expected recorder to be failed after FailNow")
+		}
 
-	recorder.Fatal("fatal error")
+		if !recorder.GetFailNowed() {
+			t.Error("expected recorder to be fail-nowed after FailNow")
+		}
+	})
 
-	if !recorder.Failed() {
-		t.Error("expected recorder to be failed after Fatal")
-	}
+	t.Run("RecorderFatal", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	if !recorder.GetFailNowed() {
-		t.Error("expected recorder to be fail-nowed after Fatal")
-	}
+		recorder.Fatal("fatal error")
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "FATAL: fatal error\n") {
-		t.Errorf("expected logs to contain fatal message, got %q", logs)
-	}
-}
+		if !recorder.Failed() {
+			t.Error("expected recorder to be failed after Fatal")
+		}
 
-func TestRecorderFatalf(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.GetFailNowed() {
+			t.Error("expected recorder to be fail-nowed after Fatal")
+		}
 
-	recorder.Fatalf("fatal error %s", "test")
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "FATAL: fatal error\n") {
+			t.Errorf("expected logs to contain fatal message, got %q", logs)
+		}
+	})
 
-	if !recorder.Failed() {
-		t.Error("expected recorder to be failed after Fatalf")
-	}
+	t.Run("RecorderFatalf", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	if !recorder.GetFailNowed() {
-		t.Error("expected recorder to be fail-nowed after Fatalf")
-	}
+		recorder.Fatalf("fatal error %s", "test")
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "FATAL: fatal error test\n") {
-		t.Errorf("expected logs to contain formatted fatal message, got %q", logs)
-	}
-}
+		if !recorder.Failed() {
+			t.Error("expected recorder to be failed after Fatalf")
+		}
 
-func TestRecorderLog(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.GetFailNowed() {
+			t.Error("expected recorder to be fail-nowed after Fatalf")
+		}
 
-	recorder.Log("test log")
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "FATAL: fatal error test\n") {
+			t.Errorf("expected logs to contain formatted fatal message, got %q", logs)
+		}
+	})
 
-	if recorder.Failed() {
-		t.Error("expected recorder to not be failed after Log")
-	}
+	t.Run("RecorderLog", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "LOG: test log\n") {
-		t.Errorf("expected logs to contain log message, got %q", logs)
-	}
-}
+		recorder.Log("test log")
 
-func TestRecorderLogf(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if recorder.Failed() {
+			t.Error("expected recorder to not be failed after Log")
+		}
 
-	recorder.Logf("test log %d", 42)
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "LOG: test log\n") {
+			t.Errorf("expected logs to contain log message, got %q", logs)
+		}
+	})
 
-	if recorder.Failed() {
-		t.Error("expected recorder to not be failed after Logf")
-	}
+	t.Run("RecorderLogf", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "LOG: test log 42\n") {
-		t.Errorf("expected logs to contain formatted log message, got %q", logs)
-	}
-}
+		recorder.Logf("test log %d", 42)
 
-func TestRecorderSkip(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if recorder.Failed() {
+			t.Error("expected recorder to not be failed after Logf")
+		}
 
-	recorder.Skip("skip reason")
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "LOG: test log 42\n") {
+			t.Errorf("expected logs to contain formatted log message, got %q", logs)
+		}
+	})
 
-	if !recorder.Skipped() {
-		t.Error("expected recorder to be skipped after Skip")
-	}
+	t.Run("RecorderSkip", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "SKIP: skip reason\n") {
-		t.Errorf("expected logs to contain skip message, got %q", logs)
-	}
-}
+		recorder.Skip("skip reason")
 
-func TestRecorderSkipNow(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.Skipped() {
+			t.Error("expected recorder to be skipped after Skip")
+		}
 
-	recorder.SkipNow()
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "SKIP: skip reason\n") {
+			t.Errorf("expected logs to contain skip message, got %q", logs)
+		}
+	})
 
-	if !recorder.Skipped() {
-		t.Error("expected recorder to be skipped after SkipNow")
-	}
-}
+	t.Run("RecorderSkipNow", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-func TestRecorderSkipf(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		recorder.SkipNow()
 
-	recorder.Skipf("skip reason %s", "test")
+		if !recorder.Skipped() {
+			t.Error("expected recorder to be skipped after SkipNow")
+		}
+	})
 
-	if !recorder.Skipped() {
-		t.Error("expected recorder to be skipped after Skipf")
-	}
+	t.Run("RecorderSkipf", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "SKIP: skip reason test\n") {
-		t.Errorf("expected logs to contain formatted skip message, got %q", logs)
-	}
-}
+		recorder.Skipf("skip reason %s", "test")
 
-func TestRecorderContext(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		if !recorder.Skipped() {
+			t.Error("expected recorder to be skipped after Skipf")
+		}
 
-	ctx := recorder.Context()
-	if ctx != context.Background() {
-		t.Error("expected context to be background context")
-	}
-}
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "SKIP: skip reason test\n") {
+			t.Errorf("expected logs to contain formatted skip message, got %q", logs)
+		}
+	})
 
-func TestRecorderOutput(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+	t.Run("RecorderContext", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	output := recorder.Output()
-	if output == nil {
-		t.Error("expected output to not be nil")
-	}
+		ctx := recorder.Context()
+		if ctx != context.Background() {
+			t.Error("expected context to be background context")
+		}
+	})
 
-	// Test writing to output
-	output.Write([]byte("test output"))
-	logs := recorder.GetLogs()
-	if !strings.Contains(logs, "test output") {
-		t.Errorf("expected logs to contain output, got %q", logs)
-	}
-}
+	t.Run("RecorderOutput", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-func TestRecorderConcurrency(t *testing.T) {
-	recorder, cleanup := exam.NewRecorder("test")
-	defer cleanup()
+		output := recorder.Output()
+		if output == nil {
+			t.Error("expected output to not be nil")
+		}
 
-	var wg sync.WaitGroup
-	numGoroutines := 10
+		// Test writing to output
+		output.Write([]byte("test output"))
+		logs := recorder.GetLogs()
+		if !strings.Contains(logs, "test output") {
+			t.Errorf("expected logs to contain output, got %q", logs)
+		}
+	})
 
-	for i := 0; i < numGoroutines; i++ {
-		wg.Add(1)
-		go func(id int) {
-			defer wg.Done()
-			recorder.Logf("goroutine %d", id)
-			recorder.Error("error from goroutine")
-			recorder.Skip("skip from goroutine")
-		}(i)
-	}
+	t.Run("RecorderConcurrency", func(t *testing.T) {
+		recorder, cleanup := exam.NewRecorder("test")
+		defer cleanup()
 
-	wg.Wait()
+		var wg sync.WaitGroup
+		numGoroutines := 10
 
-	if !recorder.Failed() {
-		t.Error("expected recorder to be failed after concurrent errors")
-	}
+		for i := 0; i < numGoroutines; i++ {
+			wg.Add(1)
+			go func(id int) {
+				defer wg.Done()
+				recorder.Logf("goroutine %d", id)
+				recorder.Error("error from goroutine")
+				recorder.Skip("skip from goroutine")
+			}(i)
+		}
 
-	if !recorder.Skipped() {
-		t.Error("expected recorder to be skipped after concurrent skips")
-	}
+		wg.Wait()
 
-	logs := recorder.GetLogs()
-	if logs == "" {
-		t.Error("expected logs to contain messages from concurrent operations")
-	}
+		if !recorder.Failed() {
+			t.Error("expected recorder to be failed after concurrent errors")
+		}
+
+		if !recorder.Skipped() {
+			t.Error("expected recorder to be skipped after concurrent skips")
+		}
+
+		logs := recorder.GetLogs()
+		if logs == "" {
+			t.Error("expected logs to contain messages from concurrent operations")
+		}
+	})
 }
