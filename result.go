@@ -13,6 +13,7 @@ type Result struct {
 }
 
 func (r *Result) Log(args ...any) *Result {
+	r.e.Helper()
 	if r.failed {
 		r.e.Log(args...)
 	}
@@ -20,6 +21,7 @@ func (r *Result) Log(args ...any) *Result {
 }
 
 func (r *Result) Logf(format string, args ...any) *Result {
+	r.e.Helper()
 	if r.failed {
 		r.e.Logf(format, args...)
 	}
@@ -27,6 +29,7 @@ func (r *Result) Logf(format string, args ...any) *Result {
 }
 
 func (r *Result) Fatal() bool {
+	r.e.Helper()
 	if r.failed {
 		r.e.FailNow()
 	}
